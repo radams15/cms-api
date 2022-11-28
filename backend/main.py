@@ -7,12 +7,11 @@ from flask_cors import CORS
 from ArticleDao import ArticleDao, UnknownArticleException
 from Article import Article
 
-article_dao = ArticleDao('articles.db')
-
 app = Flask(__name__)
 
-CORS(app)  # Enable CORS for the site to allow a frontend on a different IP/port
+article_dao = ArticleDao('articles.db')
 
+CORS(app)  # Enable CORS for the site to allow a frontend on a different IP/port
 
 def html_sanitise(inp):
     return re.sub(r'<|>|&amp;', '', inp)

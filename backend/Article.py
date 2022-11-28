@@ -31,7 +31,7 @@ class Article:
             'subtitle': self.subtitle,
             'content': self.content,
             'headerImg': self.header_img,
-            'published': self.published.timestamp()
+            'published': int(self.published.timestamp())
         }
 
         if self.id:
