@@ -28,7 +28,7 @@ class Article:
     def to_json(self):
         out = {
             'title': self.title,
-            'subTitle': self.subtitle,
+            'subtitle': self.subtitle,
             'content': self.content,
             'headerImg': self.header_img,
             'published': self.published.timestamp()

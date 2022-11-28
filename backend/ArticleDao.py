@@ -16,11 +16,22 @@ CREATE TABLE "Article" (
 
 
 class UnknownArticleException(Exception):
+    """
+    Raised to indicate an article that does not exist but was requested.
+    """
+
     def __init__(self, id):
         super().__init__(f"Unknown article: {id}")
 
 
 class ArticleDao:
+    """
+    Database manager for the Article table.
+
+    Allows selecting from and inserting into the table.
+
+    If the database file does not exist then the file and table are created.
+    """
 
     def __init__(self, db_file):
         init_table = False
@@ -29,7 +40,7 @@ class ArticleDao:
 
         self.db = sqlite3.connect(db_file, check_same_thread=False)
 
-        if init_table:
+        if init_table:  # DB did not exist so create the table.
             c = self.db.cursor()
             c.execute(DB_TABLE_STMT)
             c.close()
@@ -37,9 +48,18 @@ class ArticleDao:
         self._locked = False
 
     def _wait_lock(self):
+        """
+        Wait until the table is no longer locked.
+        """
         while self._locked: continue
 
     def close(self):
+        """
+        Save and close the database.
+
+        Sets db to None to prevent re-use.
+        :return:
+        """
         self.db.commit()
         self.db.close()
         self.db = None
@@ -79,8 +99,8 @@ class ArticleDao:
 
         article_data = c.fetchone()
 
-        if article_data == None:
-            self._locked = False
+        if not article_data:  # Article id did not exist, fail
+            self._locked = False # Unlock table to prevent deadlock
             raise UnknownArticleException(id)
 
         article = Article(
@@ -105,8 +125,8 @@ class ArticleDao:
         article_data_list = c.fetchall()
 
         for article_data in article_data_list:
-            if article_data == None:
-                self._locked = False
+            if not article_data:  # Article id did not exist, fail
+                self._locked = False # Unlock table to prevent deadlock
                 raise UnknownArticleException(id)
 
             yield Article(

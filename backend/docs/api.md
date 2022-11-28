@@ -1,4 +1,4 @@
-# Backend Documentation
+# API Documentation
 
 ## `GET /article/<id>`
 
@@ -11,12 +11,20 @@ Return data:
 ```json
 {
     "title": "gdlgds",
-    "subHeading" : "jiryjf",
+    "subtitle" : "jiryjf",
     "content" : "hlkjhkhdf",
-    "headerImage" : "https://gsgsddgs",
-    "datePublishged": "30/12/2010"
+    "headerImg" : "https://gsgsddgs",
+    "published": 1669633879
 }
 ```
+
+Where:
+
+- title: str required
+- subtitle: str
+- content: str
+- headerImg: str
+- published: int (epoch time representation of date & time)
 
 ## `POST /article`
 
@@ -27,10 +35,10 @@ Post data:
 ```json
 {
     "title": "gdlgds",
-    "subHeading" : "jiryjf",
+    "subtitle" : "jiryjf",
     "content" : "hlkjhkhdf",
-    "headerImage" : "https://gsgsddgs",
-    "datePublishged": "30/12/2010"
+    "headerImg" : "https://gsgsddgs",
+    "published": 1669633879
 }
 ```
 
