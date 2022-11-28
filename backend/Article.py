@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Article:
 
-    def __init__(self, title: str, subtitle: str, content: str, header_img: str, published, id: int=None):
+    def __init__(self, title: str, subtitle: str, content: str, header_img: str, published, id: int = None):
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -13,7 +13,17 @@ class Article:
         if isinstance(published, datetime):
             self.published = published
         else:
-            self.published = datetime.fromtimestamp(published)
+            self.published = datetime.fromtimestamp(int(published))
+
+    @staticmethod
+    def from_json(json: dict):
+        return Article(
+            json.get('title'),
+            json.get('subtitle'),
+            json.get('content'),
+            json.get('headerImg'),
+            json.get('published')
+        )
 
     def to_json(self):
         out = {
@@ -21,7 +31,7 @@ class Article:
             'subTitle': self.subtitle,
             'content': self.content,
             'headerImg': self.header_img,
-            'published': self.published
+            'published': self.published.timestamp()
         }
 
         if self.id:

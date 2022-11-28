@@ -15,6 +15,11 @@ CREATE TABLE "Article" (
 );'''
 
 
+class UnknownArticleException(Exception):
+    def __init__(self, id):
+        super().__init__(f"Unknown article: {id}")
+
+
 class ArticleDao:
 
     def __init__(self, db_file):
@@ -54,9 +59,15 @@ class ArticleDao:
             )
         )
 
+        c.execute('SELECT id from Article order by ROWID DESC limit 1')
+        id = c.fetchone()
+
         c.close()
+        self.db.commit()
 
         self._locked = False
+
+        return id[0]
 
     def get_article(self, id: int) -> Article:
         self._wait_lock()
@@ -67,6 +78,10 @@ class ArticleDao:
         c.execute('SELECT * FROM Article WHERE id IS ?', (id,))
 
         article_data = c.fetchone()
+
+        if article_data == None:
+            self._locked = False
+            raise UnknownArticleException(id)
 
         article = Article(
             *article_data[1:],
