@@ -5,6 +5,7 @@ import requests
 
 test_url = getenv('API_URL') or 'http://localhost:5000'
 
+
 class TestAPI(unittest.TestCase):
     def test_get_valid(self):
         res = requests.get(f'{test_url}/article/1')
@@ -31,3 +32,11 @@ class TestAPI(unittest.TestCase):
     def test_get_negative_number(self):
         res = requests.get(f'{test_url}/article/-11')
         self.assertEqual(res.status_code, 404)
+
+    def test_articles_is_list(self):
+        res = requests.get(f'{test_url}/article/')
+        self.assertEqual(res.status_code, 200)
+
+        data = res.json()
+
+        self.assertIsInstance(data, list)

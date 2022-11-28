@@ -100,7 +100,7 @@ class ArticleDao:
         article_data = c.fetchone()
 
         if not article_data:  # Article id did not exist, fail
-            self._locked = False # Unlock table to prevent deadlock
+            self._locked = False  # Unlock table to prevent deadlock
             raise UnknownArticleException(id)
 
         article = Article(
@@ -126,7 +126,7 @@ class ArticleDao:
 
         for article_data in article_data_list:
             if not article_data:  # Article id did not exist, fail
-                self._locked = False # Unlock table to prevent deadlock
+                self._locked = False  # Unlock table to prevent deadlock
                 raise UnknownArticleException(id)
 
             yield Article(

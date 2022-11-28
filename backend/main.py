@@ -13,6 +13,7 @@ article_dao = ArticleDao('articles.db')
 
 CORS(app)  # Enable CORS for the site to allow a frontend on a different IP/port
 
+
 def html_sanitise(inp):
     return re.sub(r'<|>|&amp;', '', inp)
 
