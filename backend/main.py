@@ -16,6 +16,15 @@ def get_article(article_id: int):
 
     return Response(json.dumps(article.to_json()), 200, mimetype='application/json')
 
+@app.route("/article/", methods=['GET'])
+def get_articles():
+    articles = article_dao.get_articles()
+
+    articles = map(Article.to_json, articles)
+
+    return Response(json.dumps(list(articles)), 200, mimetype='application/json')
+
+
 
 @app.route("/article/", methods=['POST'])
 def add_article():

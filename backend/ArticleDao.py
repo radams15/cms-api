@@ -93,3 +93,27 @@ class ArticleDao:
         self._locked = False
 
         return article
+
+    def get_articles(self) -> iter:
+        self._wait_lock()
+
+        self._locked = True
+
+        c = self.db.cursor()
+        c.execute('SELECT * FROM Article')
+
+        article_data_list = c.fetchall()
+
+        for article_data in article_data_list:
+            if article_data == None:
+                self._locked = False
+                raise UnknownArticleException(id)
+
+            yield Article(
+                *article_data[1:],
+                article_data[0]
+            )
+
+        c.close()
+
+        self._locked = False
