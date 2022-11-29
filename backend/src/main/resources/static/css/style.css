@@ -1,0 +1,30 @@
+.articleTitle {
+    font-size: large;
+}
+
+.articleSubTitle {
+    font-size: medium;
+}
+
+.articlePublishDate {
+    font-size: small;
+}
+
+.articleContent {
+    font-family: serif;
+    font-size: small;
+    margin-top: 1em;
+}
+
+.articleImage {
+    border: 1px solid blue;
+}
+
+.row {
+    display: flex;
+    margin: 10px;
+}
+
+.column {
+    flex: 50%;
+}
