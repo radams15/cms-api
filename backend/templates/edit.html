@@ -4,9 +4,6 @@
     <title>Basic CMS</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -33,11 +30,11 @@
 
     function save() {
         const data = {
-            "title": $("#articleTitle").val(),
-            "subtitle": $("#articleSubTitle").val(),
-            "published": Date.parse($("#articlePublishDate").val())/1000,
-            "header_img": $("#articleImage").val(),
-            "content": $("#articleContent").val(),
+            "title": document.getElementById("articleTitle").value,
+            "subtitle": document.getElementById("articleSubTitle").value,
+            "published": Date.parse(document.getElementById("articlePublishDate").value)/1000,
+            "header_img": document.getElementById("articleImage").value,
+            "content": document.getElementById("articleContent").value,
             "id": articleId
         };
 
