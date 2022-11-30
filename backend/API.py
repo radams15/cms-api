@@ -5,15 +5,15 @@ from flask import Blueprint, request, Response
 from ArticleDao import ArticleDao, UnknownArticleException
 from Article import Article
 
-from markupsafe import Markup
+#from markupsafe import Markup
 
 api = Blueprint('api', __name__)
 
 article_dao = ArticleDao('articles.db')
 
 def html_sanitise(inp):
-    return str(Markup.escape(inp))
-    #return re.sub(r'<|>|&amp;', '', inp)
+    return inp
+    #return str(Markup.escape(inp))
 
 @api.route("/api/v1/article/<article_id>", methods=['GET'])
 def get_article(article_id: int):
@@ -64,3 +64,21 @@ def add_article():
     id = article_dao.add_article(article)  # Add the article, return the id of the added article.
 
     return Response(json.dumps({'success': True, 'id': id}), 201, mimetype='application/json')
+
+@api.route("/api/v1/article/", methods=['PUT'])
+def update_article():
+    """
+    Change an existing article
+    :return: A success message (code 201) if the page successfully uploads.
+    """
+    data = request.json
+
+    article = Article.from_json(data)
+
+    article.title = html_sanitise(article.title)
+    article.subtitle = html_sanitise(article.subtitle)
+    article.content = html_sanitise(article.content)
+
+    article_dao.update_article(article)  # Add the article, return the id of the added article.
+
+    return Response(json.dumps({'success': True, 'id': article.id}), 201, mimetype='application/json')

@@ -4,19 +4,14 @@
     <title>Basic CMS</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 </head>
 
 <body>
-<table id="articleTable">
-    <th>Name</th>
+{{ nav | safe }}
 
-    {% for article in articles %}
-        <tr><td><a href="/article/read/{{ article.id }}">{{ article.title }}</a></td></tr>
-    {% endfor %}
-</table>
+<h1 class="center">SuperCMS</h1>
+
+<marquee><h2>Simple, safe web article storage system.</h2></marquee>
 </body>
 
 </html>

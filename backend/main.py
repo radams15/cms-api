@@ -10,7 +10,5 @@ app.register_blueprint(frontend)
 
 CORS(app)  # Enable CORS for the site to allow a frontend on a different IP/port
 
-
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000)

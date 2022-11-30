@@ -64,76 +64,115 @@ class ArticleDao:
         self.db.close()
         self.db = None
 
-    def add_article(self, article: Article):
+    def add_article(self, article: Article) -> int:
         self._wait_lock()
 
-        self._locked = True
-        c = self.db.cursor()
-        c.execute(
-            'INSERT INTO Article VALUES (null, ?, ?, ?, ?, ?)', (
-                article.title,
-                article.subtitle,
-                article.content,
-                article.header_img,
-                article.published.timestamp()
+        try:
+            self._locked = True
+            c = self.db.cursor()
+            c.execute(
+                'INSERT INTO Article VALUES (null, ?, ?, ?, ?, ?)', (
+                    article.title,
+                    article.subtitle,
+                    article.content,
+                    article.header_img,
+                    article.published.timestamp()
+                )
             )
-        )
 
-        c.execute('SELECT id from Article order by ROWID DESC limit 1')
-        id = c.fetchone()
+            c.execute('SELECT id from Article order by ROWID DESC limit 1')
+            id = c.fetchone()
 
-        c.close()
-        self.db.commit()
+            c.close()
+            self.db.commit()
+            return id[0]
 
-        self._locked = False
+        except Exception as e:
+            raise e
 
-        return id[0]
+        finally:
+            self._locked = False
+
 
     def get_article(self, id: int) -> Article:
         self._wait_lock()
 
-        self._locked = True
+        try:
+            self._locked = True
 
-        c = self.db.cursor()
-        c.execute('SELECT * FROM Article WHERE id IS ?', (id,))
+            c = self.db.cursor()
+            c.execute('SELECT * FROM Article WHERE id IS ?', (id,))
 
-        article_data = c.fetchone()
+            article_data = c.fetchone()
 
-        if not article_data:  # Article id did not exist, fail
-            self._locked = False  # Unlock table to prevent deadlock
-            raise UnknownArticleException(id)
-
-        article = Article(
-            *article_data[1:],
-            article_data[0]
-        )
-
-        c.close()
-
-        self._locked = False
-
-        return article
-
-    def get_articles(self) -> iter:
-        self._wait_lock()
-
-        self._locked = True
-
-        c = self.db.cursor()
-        c.execute('SELECT * FROM Article')
-
-        article_data_list = c.fetchall()
-
-        for article_data in article_data_list:
             if not article_data:  # Article id did not exist, fail
-                self._locked = False  # Unlock table to prevent deadlock
                 raise UnknownArticleException(id)
 
-            yield Article(
+            article = Article(
                 *article_data[1:],
                 article_data[0]
             )
 
-        c.close()
+            c.close()
 
-        self._locked = False
+            return article
+
+        except Exception as e:
+            raise e
+
+        finally:
+            self._locked = False # Unlock table to prevent deadlock
+
+    def update_article(self, article):
+        self._wait_lock()
+
+        try:
+            self._locked = True
+            c = self.db.cursor()
+            c.execute(
+                'UPDATE Article SET title=?, subtitle=?, content=?, header_img=?, published=? WHERE id IS ?', (
+                    article.title,
+                    article.subtitle,
+                    article.content,
+                    article.header_img,
+                    article.published.timestamp(),
+                    article.id
+                )
+            )
+
+            c.close()
+            self.db.commit()
+
+        except Exception as e:
+            raise e
+
+        finally:
+            self._locked = False
+
+    def get_articles(self) -> iter:
+        self._wait_lock()
+
+        try:
+            self._locked = True
+
+            c = self.db.cursor()
+            c.execute('SELECT * FROM Article')
+
+            article_data_list = c.fetchall()
+
+            for article_data in article_data_list:
+                if not article_data:  # Article id did not exist, fail
+                    raise UnknownArticleException(id)
+
+                yield Article(
+                    *article_data[1:],
+                    article_data[0]
+                )
+
+            c.close()
+
+        except:
+            return iter([]) # Prentend there were no articles, return empty iterator.
+
+        finally:
+            self._locked = False # Unlock table to prevent deadlock

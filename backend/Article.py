@@ -21,8 +21,9 @@ class Article:
             json.get('title'),
             json.get('subtitle'),
             json.get('content'),
-            json.get('headerImg'),
-            json.get('published')
+            json.get('header_img'),
+            json.get('published'),
+            json['id'] if 'id' in json.keys() else None
         )
 
     def to_json(self):
@@ -30,7 +31,7 @@ class Article:
             'title': self.title,
             'subtitle': self.subtitle,
             'content': self.content,
-            'headerImg': self.header_img,
+            'header_img': self.header_img,
             'published': int(self.published.timestamp())
         }
 

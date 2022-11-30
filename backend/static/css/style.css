@@ -1,9 +1,15 @@
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
 .articleTitle {
-    font-size: large;
+    font-size: xx-large;
 }
 
 .articleSubTitle {
-    font-size: medium;
+    font-size: large;
 }
 
 .articlePublishDate {
@@ -12,7 +18,7 @@
 
 .articleContent {
     font-family: serif;
-    font-size: small;
+    font-size: medium;
     margin-top: 1em;
 }
 
@@ -27,4 +33,39 @@
 
 .column {
     flex: 50%;
+}
+
+.block {
+    display: block;
+}
+
+.editArticleTitle {
+
+}
+
+.editArticleSubTitle {
+
+}
+
+.editArticlePublishDate {
+
+}
+
+.editArticleContent {
+    width: 100%;
+    height: 50%;
+}
+
+.editArticleImage {
+
+}
+
+.navbar {
+    background: aquamarine;
+    height: 2em;
+}
+
+.navHome {
+    font-size: large;
+    margin-right: 20px;
 }

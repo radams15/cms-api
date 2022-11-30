@@ -4,21 +4,20 @@
     <title>Basic CMS</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 </head>
 
 <body>
-        <div class="article">
-            <div class="articleTitle" id="articleTitle">{{ article.title or '' }}</div>
-            <div class="articleSubTitle" id="articleSubTitle">{{ article.subtitle or '' }}</div>
-            <div class="articlePublishDate" id="articlePublishDate">{{ article.published.isoformat() if article.published else '' }}</div>
-            <img class="articleImage" id="articleImage" alt="" src="{{ article.header_img or '' }}">
-            <div class="articleContent" id="articleContent">{{ article.content or '' }}</div>
-        </div>
+{{ nav | safe }}
 
-    <a href="/article/edit/{{ article.id }}">Edit</a>
+<div class="readArticleBox">
+    <div class="articleTitle center" id="articleTitle">{{ article.title or '' }}</div>
+    <div class="articleSubTitle center" id="articleSubTitle">{{ article.subtitle or '' }}</div>
+    <a href="{{ url_for('frontend.article_edit', article_id=article.id) }}">Edit</a>
+    <div class="articlePublishDate"
+         id="articlePublishDate">Published: {{ article.published.isoformat() if article.published else '' }}</div>
+    <img class="articleImage" id="articleImage" alt="" src="{{ article.header_img or '' }}">
+    <div class="articleContent" id="articleContent">{{ article.content or '' }}</div>
+</div>
 </body>
 
 </html>
