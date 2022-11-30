@@ -1,0 +1,27 @@
+<html lang="en">
+
+<head>
+    <title>Basic CMS</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div class="article">
+    <label for="articleTitle">Title</label><input class="articleTitle" id="articleTitle" value="{{ article.title or '' }}">
+    <label for="articleSubTitle">Subtitle</label><input class="articleSubTitle" id="articleSubTitle" value="{{ article.subtitle or '' }}">
+    <label for="articlePublishDate">Published</label><input class="articlePublishDate" id="articlePublishDate"
+                                                   value="{{ article.published.isoformat() if article.published else '' }}">
+    <label for="articleImage">Image URL</label><input class="articleImage" id="articleImage" alt="" value="{{ article.header_img or '' }}">
+    <label for="articleContent">Content</label><textarea class="articleContent" id="articleContent">{{ article.content or '' }}</textarea>
+</div>
+
+<script>
+
+</script>
+</body>
+
+</html>
