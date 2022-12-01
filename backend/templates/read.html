@@ -7,7 +7,7 @@
 </head>
 
 <body>
-{{ nav | safe }}
+{{ nav | safe }} <!-- safe to allow unescaped nav content -->
 
 <div class="readArticleBox">
     <div class="articleTitle center" id="articleTitle">{{ article.title or '' }}</div>

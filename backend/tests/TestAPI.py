@@ -8,7 +8,7 @@ test_url = getenv('API_URL') or 'http://localhost:5000'
 
 class TestAPI(unittest.TestCase):
     def test_get_valid(self):
-        res = requests.get(f'{test_url}/article/1')
+        res = requests.get(f'{test_url}/api/v1/article/1')
         self.assertEqual(res.status_code, 200)
 
         data: dict = res.json()
@@ -18,7 +18,7 @@ class TestAPI(unittest.TestCase):
         self.assertIn('title', data.keys())
         self.assertIn('subtitle', data.keys())
         self.assertIn('content', data.keys())
-        self.assertIn('headerImg', data.keys())
+        self.assertIn('header_img', data.keys())
         self.assertIn('published', data.keys())
 
         self.assertIsInstance(data['published'], int)
@@ -26,15 +26,15 @@ class TestAPI(unittest.TestCase):
         self.assertIsNotNone(data['title'])
 
     def test_get_large_number(self):
-        res = requests.get(f'{test_url}/article/100000')
+        res = requests.get(f'{test_url}/api/v1/article/100000')
         self.assertEqual(res.status_code, 404)
 
     def test_get_negative_number(self):
-        res = requests.get(f'{test_url}/article/-11')
+        res = requests.get(f'{test_url}/api/v1/article/-11')
         self.assertEqual(res.status_code, 404)
 
     def test_articles_is_list(self):
-        res = requests.get(f'{test_url}/article/')
+        res = requests.get(f'{test_url}/api/v1/article/')
         self.assertEqual(res.status_code, 200)
 
         data = res.json()

@@ -164,7 +164,7 @@ class ArticleDao:
                 if not article_data:  # Article id did not exist, fail
                     raise UnknownArticleException(id)
 
-                yield Article(
+                yield Article( # Id is at end of Article object so place at end.
                     *article_data[1:],
                     article_data[0]
                 )

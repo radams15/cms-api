@@ -14,7 +14,8 @@
                                                   value="{{ article.title or '' }}">
     <label for="articleSubTitle">Subtitle</label><input class="editArticleSubTitle block" id="articleSubTitle"
                                                         value="{{ article.subtitle or '' }}">
-    <label for="articlePublishDate">Published</label><input type="datetime-local" class="editArticlePublishDate block" id="articlePublishDate"
+    <label for="articlePublishDate">Published</label><input type="datetime-local" class="editArticlePublishDate block"
+                                                            id="articlePublishDate"
                                                             value="{{ article.published.isoformat() if article.published else '' }}">
     <label for="articleImage">Image URL</label><input class="editArticleImage block" id="articleImage" alt=""
                                                       value="{{ article.header_img or '' }}">
@@ -25,14 +26,13 @@
 <button onclick="save()">Save</button>
 
 <script>
-    const postUrl = "{{ url_for('frontend.index') }}";
     const articleId = {{ article.id }};
 
     function save() {
         const data = {
             "title": document.getElementById("articleTitle").value,
             "subtitle": document.getElementById("articleSubTitle").value,
-            "published": Date.parse(document.getElementById("articlePublishDate").value)/1000,
+            "published": Date.parse(document.getElementById("articlePublishDate").value) / 1000,
             "header_img": document.getElementById("articleImage").value,
             "content": document.getElementById("articleContent").value,
             "id": articleId
@@ -40,16 +40,13 @@
 
         const json = JSON.stringify(data);
 
-        console.log(json);
-
         const req = new XMLHttpRequest();
-        req.open("PUT", "{{ url_for('api.update_article') }}", true);
+        req.open("PUT", "{{ url_for('api.update_article') }}", true); // Open PUT request to api article update URL.
         req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 
         req.onload = function () {
-            var res = JSON.parse(req.responseText);
-            if (req.readyState === 4) {
-                document.location.replace("{{ url_for('frontend.article_read', article_id=article.id) }}");
+            if (req.readyState === 4) { // Request complete
+                document.location.replace("{{ url_for('frontend.article_read', article_id=article.id) }}"); // Redirect to read page.
             }
         }
 

@@ -5,8 +5,6 @@ from flask import Blueprint, request, Response
 from ArticleDao import ArticleDao, UnknownArticleException
 from Article import Article
 
-#from markupsafe import Markup
-
 api = Blueprint('api', __name__)
 
 article_dao = ArticleDao('articles.db')
