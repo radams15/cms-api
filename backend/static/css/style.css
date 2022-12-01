@@ -1,5 +1,57 @@
 body {
-    background: lightseagreen;
+    background-color: #fdcdcd;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #454545;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Comic Sans MS', cursive;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+ul {
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+}
+
+body {
+    width: 980px;
+    margin: 0 auto;
+}
+
+.navbar {
+    width: 100%;
+    background-color: #0099cc;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+.navbar a {
+    text-align: center;
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #000000;
+    text-decoration: underline;
+}
+
+.readArticleBox .editArticleBox {
+    width: 100%;
+    padding: 10px;
+    background-color: #efefef;
+    margin-bottom: 20px;
 }
 
 .center {
@@ -62,14 +114,4 @@ body {
 
 .editArticleImage {
 
-}
-
-.navbar {
-    background: aquamarine;
-    height: 2em;
-}
-
-.navHome {
-    font-size: large;
-    margin-right: 20px;
 }
