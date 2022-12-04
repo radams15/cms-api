@@ -16,7 +16,7 @@
                                                         value="{{ article.subtitle or '' }}">
     <label for="articlePublishDate" id="articlePublishDateLabel">Published</label><input type="datetime-local" class="editArticlePublishDate block"
                                                             id="articlePublishDate"
-                                                            value="{{ article.published.isoformat() if article.published else '' }}">
+                                                            value="{{ article.published_iso() if article.published else ''}}">
     <label for="articleImage">Image URL</label><input class="editArticleImage block" id="articleImage" alt=""
                                                       value="{{ article.header_img or '' }}">
     <label for="articleContent">Content</label><textarea class="editArticleContent block"

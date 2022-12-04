@@ -29,6 +29,14 @@ class Article:
             json['id'] if 'id' in json.keys() else None
         )
 
+    def published_iso(self):
+        return ':'.join(
+            self.published
+                .isoformat()
+                .split(':')[:-1] # JS accepts isoformat but without the microseconds, so strip those out.
+                # Yes, I could have used strftime.
+        )
+
     def to_json(self):
         out = {
             'title': self.title,
