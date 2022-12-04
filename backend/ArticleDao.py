@@ -23,6 +23,14 @@ class UnknownArticleException(Exception):
     def __init__(self, id):
         super().__init__(f"Unknown article: {id}")
 
+class InvalidArticleException(Exception):
+    """
+    Raised to indicate an article that has failed the validity check.
+    """
+
+    def __init__(self, article):
+        super().__init__(f"Invalid article: {article.title}")
+
 
 class ArticleDao:
     """
@@ -65,6 +73,9 @@ class ArticleDao:
         self.db = None
 
     def add_article(self, article: Article) -> int:
+        if not article.valid():
+            raise InvalidArticleException(article)
+
         self._wait_lock()
 
         try:

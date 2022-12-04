@@ -15,6 +15,9 @@ class Article:
         else:
             self.published = datetime.fromtimestamp(int(published))
 
+    def valid(self):
+        return len(self.title) != 0
+
     @staticmethod
     def from_json(json: dict):
         return Article(

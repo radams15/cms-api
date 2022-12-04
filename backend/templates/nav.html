@@ -1,5 +1,6 @@
 <div class="navbar">
     <a class="navHome" href="/">Home</a>
+    <a class="navNew" href="/article/new/">New</a>
 
     {% for article in articles %}
         <a href="/article/read/{{ article.id }}">{{ article.title }}</a>

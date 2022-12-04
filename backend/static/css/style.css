@@ -38,7 +38,6 @@ body {
     text-align: center;
     display: inline-block;
     padding: 5px 10px;
-    font-size: 14px;
     font-weight: bold;
 }
 
@@ -114,4 +113,16 @@ body {
 
 .editArticleImage {
 
+}
+
+
+
+.navHome {
+    font-size: large;
+}
+
+
+.navNew {
+    font-size: large;
+    margin-right: 20px;
 }

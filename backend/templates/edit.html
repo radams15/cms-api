@@ -14,7 +14,7 @@
                                                   value="{{ article.title or '' }}">
     <label for="articleSubTitle">Subtitle</label><input class="editArticleSubTitle block" id="articleSubTitle"
                                                         value="{{ article.subtitle or '' }}">
-    <label for="articlePublishDate">Published</label><input type="datetime-local" class="editArticlePublishDate block"
+    <label for="articlePublishDate" id="articlePublishDateLabel">Published</label><input type="datetime-local" class="editArticlePublishDate block"
                                                             id="articlePublishDate"
                                                             value="{{ article.published.isoformat() if article.published else '' }}">
     <label for="articleImage">Image URL</label><input class="editArticleImage block" id="articleImage" alt=""
@@ -26,6 +26,46 @@
 <button onclick="save()">Save</button>
 
 <script>
+    {% if new %}
+        {% set MAGIC = 123456789 %}
+
+    function save() {
+        var date = Date.parse(document.getElementById("articlePublishDate").value);
+
+        if(isNaN(date)){
+            document.getElementById("articlePublishDateLabel").style.backgroundColor = "red";
+
+            console.log("fail");
+            return;
+        }
+
+        const data = {
+            "title": document.getElementById("articleTitle").value,
+            "subtitle": document.getElementById("articleSubTitle").value,
+            "published": date / 1000,
+            "header_img": document.getElementById("articleImage").value,
+            "content": document.getElementById("articleContent").value,
+        };
+
+        const json = JSON.stringify(data);
+
+        const req = new XMLHttpRequest();
+        req.open("POST", "{{ url_for('api.add_article') }}", true); // Open PUT request to api article update URL.
+        req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+        req.onload = function () {
+            if (req.readyState === 4) { // Request complete
+                var data = JSON.parse(req.responseText);
+
+                if(data.success) {
+                    document.location.replace("{{ url_for('frontend.article_read', article_id=MAGIC) }}".replace("{{ MAGIC }}", data.id)); // Redirect to read page.
+                }
+            }
+        }
+
+        req.send(json);
+    }
+    {% else %}
     const articleId = {{ article.id }};
 
     function save() {
@@ -52,6 +92,7 @@
 
         req.send(json);
     }
+    {% endif %}
 </script>
 </body>
 

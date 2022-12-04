@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, request, Response
 
-from ArticleDao import ArticleDao, UnknownArticleException
+from ArticleDao import ArticleDao, UnknownArticleException, InvalidArticleException
 from Article import Article
 
 api = Blueprint('api', __name__)
@@ -59,9 +59,12 @@ def add_article():
     article.subtitle = html_sanitise(article.subtitle)
     article.content = html_sanitise(article.content)
 
-    id = article_dao.add_article(article)  # Add the article, return the id of the added article.
+    try:
+        id = article_dao.add_article(article)  # Add the article, return the id of the added article.
+        return Response(json.dumps({'success': True, 'id': id}), 201, mimetype='application/json')
+    except InvalidArticleException:
+        return Response(json.dumps({'success': False}), 400, mimetype='application/json')
 
-    return Response(json.dumps({'success': True, 'id': id}), 201, mimetype='application/json')
 
 @api.route("/api/v1/article/", methods=['PUT'])
 def update_article():
