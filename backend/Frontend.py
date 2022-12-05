@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, Response
 
 from API import article_dao
-from backend.Article import Article
+from Article import Article
 
 page = Blueprint('frontend', __name__)
 
