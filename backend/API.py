@@ -7,7 +7,7 @@ from Article import Article
 
 api = Blueprint('api', __name__)
 
-article_dao = ArticleDao('articles.db')
+article_dao = ArticleDao('mongodb://username:password@localhost:27017/')
 
 def html_sanitise(inp):
     return inp

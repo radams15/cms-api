@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Article:
 
-    def __init__(self, title: str, subtitle: str, content: str, header_img: str, published, id: int = None):
+    def __init__(self, title: str, subtitle: str, content: str, header_img: str, published, id: str = None):
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -26,7 +26,7 @@ class Article:
             json.get('content'),
             json.get('header_img'),
             json.get('published'),
-            json['id'] if 'id' in json.keys() else None
+            json['id'] if 'id' in json.keys() else (str(json['_id']) if '_id' in json.keys() else None)
         )
 
     def published_iso(self):

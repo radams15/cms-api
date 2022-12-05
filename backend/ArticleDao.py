@@ -1,5 +1,8 @@
 import sqlite3
+import pymongo
 from os import path
+
+from bson import ObjectId
 
 from Article import Article
 
@@ -23,6 +26,7 @@ class UnknownArticleException(Exception):
     def __init__(self, id):
         super().__init__(f"Unknown article: {id}")
 
+
 class InvalidArticleException(Exception):
     """
     Raised to indicate an article that has failed the validity check.
@@ -41,17 +45,15 @@ class ArticleDao:
     If the database file does not exist then the file and table are created.
     """
 
-    def __init__(self, db_file):
-        init_table = False
-        if not path.exists(db_file):
-            init_table = True
+    def __init__(self, url):
+        self.client = pymongo.MongoClient(url)
 
-        self.db = sqlite3.connect(db_file, check_same_thread=False)
+        # if 'Article' not in self.client.list_database_names():  # DB did not exist so create the table.
+        #    pass
 
-        if init_table:  # DB did not exist so create the table.
-            c = self.db.cursor()
-            c.execute(DB_TABLE_STMT)
-            c.close()
+        self.db = self.client['Article']
+
+        self.articles = self.db['Article']
 
         self._locked = False
 
@@ -80,23 +82,12 @@ class ArticleDao:
 
         try:
             self._locked = True
-            c = self.db.cursor()
-            c.execute(
-                'INSERT INTO Article VALUES (null, ?, ?, ?, ?, ?)', (
-                    article.title,
-                    article.subtitle,
-                    article.content,
-                    article.header_img,
-                    article.published.timestamp()
-                )
-            )
 
-            c.execute('SELECT id from Article order by ROWID DESC limit 1')
-            id = c.fetchone()
+            to_insert = article.to_json()
 
-            c.close()
-            self.db.commit()
-            return id[0]
+            res = self.articles.insert_one(to_insert)
+
+            return res.inserted_id
 
         except Exception as e:
             raise e
@@ -104,27 +95,17 @@ class ArticleDao:
         finally:
             self._locked = False
 
-
-    def get_article(self, id: int) -> Article:
+    def get_article(self, id: str) -> Article:
         self._wait_lock()
 
         try:
             self._locked = True
 
-            c = self.db.cursor()
-            c.execute('SELECT * FROM Article WHERE id IS ?', (id,))
+            query = {'_id': ObjectId(id)}
 
-            article_data = c.fetchone()
+            article_json = self.articles.find_one(query)
 
-            if not article_data:  # Article id did not exist, fail
-                raise UnknownArticleException(id)
-
-            article = Article(
-                *article_data[1:],
-                article_data[0]
-            )
-
-            c.close()
+            article = Article.from_json(article_json)
 
             return article
 
@@ -132,27 +113,20 @@ class ArticleDao:
             raise e
 
         finally:
-            self._locked = False # Unlock table to prevent deadlock
+            self._locked = False  # Unlock table to prevent deadlock
 
     def update_article(self, article):
         self._wait_lock()
 
         try:
             self._locked = True
-            c = self.db.cursor()
-            c.execute(
-                'UPDATE Article SET title=?, subtitle=?, content=?, header_img=?, published=? WHERE id IS ?', (
-                    article.title,
-                    article.subtitle,
-                    article.content,
-                    article.header_img,
-                    article.published.timestamp(),
-                    article.id
-                )
-            )
 
-            c.close()
-            self.db.commit()
+            to_insert = article.to_json()
+
+            query = {'_id': ObjectId(article.id)}
+            new_values = {'$set': article.to_json()}
+
+            self.articles.update_one(query, new_values)
 
         except Exception as e:
             raise e
@@ -166,24 +140,10 @@ class ArticleDao:
         try:
             self._locked = True
 
-            c = self.db.cursor()
-            c.execute('SELECT * FROM Article')
-
-            article_data_list = c.fetchall()
-
-            for article_data in article_data_list:
-                if not article_data:  # Article id did not exist, fail
-                    raise UnknownArticleException(id)
-
-                yield Article( # Id is at end of Article object so place at end.
-                    *article_data[1:],
-                    article_data[0]
-                )
-
-            c.close()
+            return map(Article.from_json, self.articles.find())
 
         except:
-            return iter([]) # Prentend there were no articles, return empty iterator.
+            return iter([])  # Prentend there were no articles, return empty iterator.
 
         finally:
-            self._locked = False # Unlock table to prevent deadlock
+            self._locked = False  # Unlock table to prevent deadlock
